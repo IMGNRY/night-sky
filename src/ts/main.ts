@@ -1,30 +1,31 @@
 import { sleep, random } from './tools'
-// import anime, { easings } from 'animejs'
+import './tools'
+import anime from 'animejs'
 
-interface Vector {
-    x: number
-    y: number
-}
+// interface Vector {
+//     x: number
+//     y: number
+// }
 
-interface Particle extends HTMLDivElement {
-    createdAt: number
-    pos: Vector
-    scale: Vector
-    opacity: number
-    velocity: Vector
-    rotation: number
-}
+// interface Particle extends HTMLDivElement {
+//     createdAt: number
+//     pos: Vector
+//     scale: Vector
+//     opacity: number
+//     velocity: Vector
+//     rotation: number
+// }
 
 // const applyChanges = (particle: Particle) => {
 //     particle.style.transform = `rotate(${particle.rotation}deg) translate3d(${particle.pos.x}px, ${particle.pos.y}px, 0) scale(${particle.scale.x}, ${particle.scale.y})`
 //     particle.style.opacity = `${particle.opacity}`
 // }
-const applyPosition = (particle: Particle) => {
-    particle.style.transform = `translate3d(${particle.pos.x}px, ${particle.pos.y}px, 0)`
-}
+// const applyPosition = (particle: Particle) => {
+//     particle.style.transform = `translate3d(${particle.pos.x}px, ${particle.pos.y}px, 0)`
+// }
 
-const stars: Particle[] = []
-const meteors: Particle[] = []
+// const stars: Particle[] = []
+// const meteors: Particle[] = []
 // const easing = Bezier(0, 0.55, 0.67, 0.59)
 
 const PREF = {
@@ -59,7 +60,8 @@ const PREF = {
 
 // // create meteors
 // setInterval(() => {
-const randomScreenX = () => Math.random().remap([0, 1], [100, winSize.w - 200])
+const randomScreenX = () => Math.random().remap([0, 1], [0, winSize.w])
+const randomScreenY = () => Math.random().remap([0, 1], [0, winSize.h])
 const randomRotation = () => Math.random().remap([0, 1], [-60, 60])
 
 let winSize: { w: number; h: number } = { w: 0, h: 0 }
@@ -74,70 +76,96 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     nightSkyContainer = document.querySelector('.night-sky-container')
-    const meteorAnchor = document.createElement('div')
-    meteorAnchor.classList.add('meteor-anchor')
-    meteorAnchor.style.transform = `translateX(${randomScreenX()}px) rotate(${randomRotation()}deg)`
-    const meteor = document.createElement('div')
-    meteor.classList.add('meteor', 'meteor-anim')
-    meteorAnchor.appendChild(meteor)
-    nightSkyContainer.appendChild(meteorAnchor)
-    document.body.insertBefore(nightSkyContainer, document.body.firstChild)
-    meteor.addEventListener('animationend', async ev => {
-        console.log('animationend')
-
-        // const meteorClone = meteor.cloneNode(true) as HTMLDivElement
-        // meteorClone.classList.add('hej')
-
-        // meteor.style.animation = ''
-        meteor.classList.remove('meteor-anim')
-        meteorAnchor.style.transform = `translate3d(${randomScreenX()}px, 0, 0) rotate(${randomRotation()}deg)`
-        await sleep(random(300, 3000))
-        // meteor.replaceWith(meteorClone)
-
-        // meteor.parentNode.replaceChild(meteorClone, meteor)
-
-        // console.log('done')
-
-        // meteor.style.animation = 'meteor'
-        // setTimeout(() => {
-        meteor.classList.add('meteor-anim')
-        // }, 1000)
-    })
 
     const createstarsIntervalId = setInterval(() => {
-        const star = document.createElement('div') as Particle
-        star.classList.add('star', 'star-anim')
-        star.addEventListener('animationend', async ev => {
-            star.pos = {
-                x: random(0, winSize.w),
-                y: random(0, winSize.h)
-            }
-            // star.style.animation = ''
-            star.classList.remove('star-anim')
-            await sleep(0)
-            // star.style.animation = 'star'
-            star.classList.add('star-anim')
-            applyPosition(star)
-        })
-        // star.createdAt = TS
-        star.pos = {
-            x: random(0, winSize.w),
-            y: random(0, winSize.h)
-        }
-        // const scale = random(PREF.STAR_SCALE_RANGE[0], PREF.STAR_SCALE_RANGE[1])
-        // star.scale = {
-        //     x: 1,
-        //     y: 1
-        // }
-        // star.rotation = 0
-        // star.opacity = 1
-        applyPosition(star)
-        stars.push(star)
+        const star = document.createElement('div')
+        star.classList.add('star')
         nightSkyContainer.appendChild(star)
-        if (stars.length >= 10) {
-            clearInterval(createstarsIntervalId)
-        }
-    }, 200)
+        star.style.transform = `translate3d(${randomScreenX()}px,${randomScreenY()}px, 0)`
+
+        const starAnim = anime({
+            targets: star,
+            opacity: 1,
+            duration: 3000,
+            direction: 'alternate',
+            loop: 2,
+            easing: 'linear',
+            complete: () => {
+                // console.log('complete')
+                star.style.transform = `translate3d(${randomScreenX()}px,${randomScreenY()}px, 0)`
+                starAnim.restart()
+            }
+            // loopComplete: () => {
+            //     console.log('loopComplete')
+            // }
+        })
+
+        // console.log('star anim:', starAnim)
+    }, 1000)
+
+    // meteorAnchor.classList.add('meteor-anchor')
+    // meteorAnchor.style.transform = `translateX(${randomScreenX()}px) rotate(${randomRotation()}deg)`
+    // const meteor = document.createElement('div')
+    // meteor.classList.add('meteor', 'meteor-anim')
+    // meteorAnchor.appendChild(meteor)
+    // nightSkyContainer.appendChild(meteorAnchor)
+    // document.body.insertBefore(nightSkyContainer, document.body.firstChild)
+    // meteor.addEventListener('animationend', async ev => {
+    //     console.log('animationend')
+
+    //     // const meteorClone = meteor.cloneNode(true) as HTMLDivElement
+    //     // meteorClone.classList.add('hej')
+
+    //     // meteor.style.animation = ''
+    //     meteor.classList.remove('meteor-anim')
+    //     meteorAnchor.style.transform = `translate3d(${randomScreenX()}px, 0, 0) rotate(${randomRotation()}deg)`
+    //     await sleep(random(300, 3000))
+    //     // meteor.replaceWith(meteorClone)
+
+    //     // meteor.parentNode.replaceChild(meteorClone, meteor)
+
+    //     // console.log('done')
+
+    //     // meteor.style.animation = 'meteor'
+    //     // setTimeout(() => {
+    //     meteor.classList.add('meteor-anim')
+    //     // }, 1000)
+    // })
+
+    // const createstarsIntervalId = setInterval(() => {
+    //     const star = document.createElement('div') as Particle
+    //     star.classList.add('star', 'star-anim')
+    //     star.addEventListener('animationend', async ev => {
+    //         star.pos = {
+    //             x: random(0, winSize.w),
+    //             y: random(0, winSize.h)
+    //         }
+    //         // star.style.animation = ''
+    //         star.classList.remove('star-anim')
+    //         await sleep(0)
+    //         // star.style.animation = 'star'
+    //         star.classList.add('star-anim')
+    //         applyPosition(star)
+    //     })
+    //     // star.createdAt = TS
+    //     star.pos = {
+    //         x: random(0, winSize.w),
+    //         y: random(0, winSize.h)
+    //     }
+    //     // const scale = random(PREF.STAR_SCALE_RANGE[0], PREF.STAR_SCALE_RANGE[1])
+    //     // star.scale = {
+    //     //     x: 1,
+    //     //     y: 1
+    //     // }
+    //     // star.rotation = 0
+    //     // star.opacity = 1
+    //     applyPosition(star)
+    //     stars.push(star)
+    //     nightSkyContainer.appendChild(star)
+    //     if (stars.length >= 10) {
+    //         clearInterval(createstarsIntervalId)
+    //     }
+    // }, 200)
 })
 //     // const meteor = document.createElement('div') as Particle
 //     // meteors.push(meteor)
