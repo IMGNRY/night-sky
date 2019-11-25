@@ -5,7 +5,7 @@ import { RGBSplitFilter } from '@pixi/filter-rgb-split'
 import { AdvancedBloomFilter } from '@pixi/filter-advanced-bloom'
 
 const PREF = {
-    STAR_MAX_ALPHA_VELOCITY: 0.01,
+    STAR_MAX_ALPHA_VELOCITY: 0.015,
     METEOR_VELOCITY: 15,
     // STAR_SCALE_RANGE: [0.3, 1.5],
     STAR_BIRTH_INTERVAL: 50,
@@ -49,12 +49,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     interface Star extends PIXI.Sprite {
         alphaVelocity: number
+        scaleMod: number
     }
 
     const resources = await new Promise<Partial<Record<string, PIXI.LoaderResource>>>(resolve => {
-        app.loader.add('meteor', 'meteor.png')
-        app.loader.add('star', 'star.png', {})
-        app.loader.add('cloud', 'cloud1.png')
+        // app.loader.add('meteor', '/textures/meteor.png')
+        app.loader.add('star', '/textures/star.png', {})
+        app.loader.add('cloud', '/textures/cloud.png')
         app.loader.load((loader, resources) => {
             resolve(resources)
         })
@@ -77,9 +78,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         star.x = randomScreenX()
         star.y = randomScreenY()
 
-        star.alphaVelocity = random(-PREF.STAR_MAX_ALPHA_VELOCITY, -PREF.STAR_MAX_ALPHA_VELOCITY)
+        star.alphaVelocity = random(-PREF.STAR_MAX_ALPHA_VELOCITY, PREF.STAR_MAX_ALPHA_VELOCITY)
         // star.tint = 0xff0000
         star.alpha = 0
+        star.scaleMod = random(0.5, 1.5)
         star.scale.set(0)
 
         particleContainer.addChild(star)
@@ -159,7 +161,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 star.alphaVelocity = -star.alphaVelocity
             }
             star.alpha += star.alphaVelocity
-            star.scale.set(star.scale.x + star.alphaVelocity * 0.5)
+            star.scale.set(star.scale.x + star.alphaVelocity * star.scaleMod)
         })
 
         meteor.y += PREF.METEOR_VELOCITY
@@ -187,6 +189,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         cloud3.tilePosition.x += 0.8
         cloud4.tilePosition.x += 1
     })
+
+    setInterval(() => {
+        console.log('app.renderer.height:', app.renderer.height)
+    }, 1000)
 })
 // })
 
