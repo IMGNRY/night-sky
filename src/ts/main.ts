@@ -37,9 +37,10 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     app.stage.filters = [
         new RGBSplitFilter(new PIXI.Point(-0.5, -0.5), new PIXI.Point(1, -0.5), new PIXI.Point(-1, 0.5)),
-        new AdvancedBloomFilter({ threshold: 0.6, blur: 3, bloomScale: 4, brightness: 1.3 })
+        new AdvancedBloomFilter({ threshold: 0.6, blur: 3, bloomScale: 4, brightness: 1 })
     ]
     nightSkyContainer.appendChild(app.view)
+    app.stage.alpha = 0
 
     const randomScreenX = () => Math.random().remap([0, 1], [0, app.renderer.width])
     const randomScreenY = () => Math.random().remap([0, 1], [0, app.renderer.height])
@@ -86,8 +87,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     meteor.scale.y = PREF.METEOR_START_LENGTH_MOD
     meteor.y = -meteor.height
     meteorAnchor.addChild(meteor)
-    app.stage.addChild(meteorAnchor)
-
+    setTimeout(() => {
+        app.stage.addChild(meteorAnchor)
+    }, 3000)
     const cloud = new PIXI.TilingSprite(resources.cloud.texture, 600, 276)
     cloud.width = app.renderer.width
     cloud.y -= 150
@@ -122,6 +124,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     app.stage.addChild(cloud4)
 
     app.ticker.add(() => {
+        if (app.stage.alpha < 1) {
+            app.stage.alpha += 0.005
+            if (app.stage.alpha > 1) app.stage.alpha = 1
+        }
+
         stars.forEach(star => {
             if (star.alpha >= 1) {
                 star.alphaVelocity = -star.alphaVelocity
