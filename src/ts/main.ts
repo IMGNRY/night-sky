@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     })
     app.stage.filters = [
         new RGBSplitFilter(new PIXI.Point(-0.5, -0.5), new PIXI.Point(1, -0.5), new PIXI.Point(-1, 0.5)),
-        new AdvancedBloomFilter({ threshold: 0.3, blur: 6, bloomScale: 2, brightness: 1 })
+        new AdvancedBloomFilter({ threshold: 0.6, blur: 3, bloomScale: 4, brightness: 1.3 })
     ]
     nightSkyContainer.appendChild(app.view)
 
@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     interface Star extends PIXI.Sprite {
         alphaVelocity: number
-        scaleMod: number
+        scaleMax: number
     }
 
     const resources = await new Promise<Partial<Record<string, PIXI.LoaderResource>>>(resolve => {
@@ -63,8 +63,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // app.loader.add('meteor', 'meteor.png').load((loader, resources) => {
     const stars: Star[] = []
-    const particleContainer = new PIXI.ParticleContainer(300, { tint: true })
-    app.stage.addChild(particleContainer)
+    // const particleContainer = new PIXI.ParticleContainer(300, { tint: true })
 
     const starBirthIntervalId = setInterval(() => {
         const star = new PIXI.Sprite(resources['star'].texture) as Star
@@ -81,10 +80,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         star.alphaVelocity = random(-PREF.STAR_MAX_ALPHA_VELOCITY, PREF.STAR_MAX_ALPHA_VELOCITY)
         // star.tint = 0xff0000
         star.alpha = 0
-        star.scaleMod = random(0.5, 1.5)
+        star.scaleMax = random(0.3, 1)
         star.scale.set(0)
 
-        particleContainer.addChild(star)
+        app.stage.addChild(star)
+        // particleContainer.addChild(star)
         stars.push(star)
         if (stars.length == PREF.STAR_COUNT) {
             clearTimeout(starBirthIntervalId)
@@ -104,7 +104,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // meteor.scale.x = 0.5
     meteor.scale.y = 3
-    meteor.y = 100
+    meteor.y = -meteor.height
     // meteor.x = randomScreenX()
     // meteor.y = randomScreenY()
 
@@ -161,18 +161,20 @@ window.addEventListener('DOMContentLoaded', async () => {
                 star.alphaVelocity = -star.alphaVelocity
             }
             star.alpha += star.alphaVelocity
-            star.scale.set(star.scale.x + star.alphaVelocity * star.scaleMod)
+            star.scale.set(Math.min(star.scale.x + star.alphaVelocity, star.scaleMax))
         })
 
         meteor.y += PREF.METEOR_VELOCITY
-        meteor.scale.y -= 0.01
+        meteor.scale.y -= 0.02
         meteor.scale.x *= 0.99
         meteor.alpha *= 0.99
 
         if (meteor.alpha < 0.1) {
-            meteor.y = -meteor.height * 3
             meteor.scale.y = 3
             meteor.scale.x = 1
+            meteor.y = -meteor.height
+            console.log('meteor.height:', meteor.height)
+
             meteor.alpha = 1
             if (random(0, 1) > 0.5) {
                 meteorAnchor.x = random(-200, app.renderer.width / 2 - 200)
