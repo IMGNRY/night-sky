@@ -6,7 +6,7 @@ import { AdvancedBloomFilter } from '@pixi/filter-advanced-bloom'
 
 const PREF = {
     STAR_MAX_ALPHA_VELOCITY: 0.015,
-    METEOR_VELOCITY: 15,
+    METEOR_VELOCITY: 17,
     // STAR_SCALE_RANGE: [0.3, 1.5],
     STAR_BIRTH_INTERVAL: 50,
     STAR_COUNT: 200
@@ -157,31 +157,37 @@ window.addEventListener('DOMContentLoaded', async () => {
                 star.alphaVelocity = -star.alphaVelocity
             } else if (star.alpha <= 0) {
                 star.x = randomScreenX()
-                star.y = randomScreenY()
+                star.y = EasingFunctions.easeInQuad(Math.random()).remap([0, 1], [10, app.renderer.height - 10])
                 star.alphaVelocity = -star.alphaVelocity
             }
             star.alpha += star.alphaVelocity
             star.scale.set(Math.min(star.scale.x + star.alphaVelocity, star.scaleMax))
         })
 
-        meteor.y += PREF.METEOR_VELOCITY
-        meteor.scale.y -= 0.02
-        meteor.scale.x *= 0.99
-        meteor.alpha *= 0.99
+        if (meteor.visible) {
+            meteor.y += PREF.METEOR_VELOCITY
+            meteor.scale.y -= 0.02
+            meteor.scale.x *= 0.99
+            meteor.alpha *= 0.99
 
-        if (meteor.alpha < 0.1) {
-            meteor.scale.y = 3
-            meteor.scale.x = 1
-            meteor.y = -meteor.height
-            console.log('meteor.height:', meteor.height)
+            if (meteor.alpha < 0.1) {
+                meteor.visible = false
+                meteor.scale.y = 3
+                meteor.scale.x = 1
+                meteor.y = -meteor.height
+                console.log('meteor.height:', meteor.height)
 
-            meteor.alpha = 1
-            if (random(0, 1) > 0.5) {
-                meteorAnchor.x = random(-200, app.renderer.width / 2 - 200)
-                meteorAnchor.angle = -random(55, 80)
-            } else {
-                meteorAnchor.x = random(app.renderer.width / 2 + 200, app.renderer.width + 200)
-                meteorAnchor.angle = random(55, 80)
+                meteor.alpha = 1
+                if (random(0, 1) > 0.5) {
+                    meteorAnchor.x = random(-200, app.renderer.width / 2 - 200)
+                    meteorAnchor.angle = -random(55, 80)
+                } else {
+                    meteorAnchor.x = random(app.renderer.width / 2 + 200, app.renderer.width + 200)
+                    meteorAnchor.angle = random(55, 80)
+                }
+                setTimeout(() => {
+                    meteor.visible = true
+                }, random(0, 5000))
             }
         }
 
@@ -208,4 +214,46 @@ function createGradient(from: string, to: string) {
     ctx.fillStyle = grd
     ctx.fillRect(0, 0, 100, 100)
     return PIXI.Texture.from(c)
+}
+
+const EasingFunctions = {
+    linear(t: number) {
+        return t
+    },
+    easeInQuad(t: number) {
+        return t * t
+    },
+    easeOutQuad(t: number) {
+        return t * (2 - t)
+    },
+    easeInOutQuad(t: number) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+    },
+    easeInCubic(t: number) {
+        return t * t * t
+    },
+    easeOutCubic(t: number) {
+        return --t * t * t + 1
+    },
+    easeInOutCubic(t: number) {
+        return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
+    },
+    easeInQuart(t: number) {
+        return t * t * t * t
+    },
+    easeOutQuart(t: number) {
+        return 1 - --t * t * t * t
+    },
+    easeInOutQuart(t: number) {
+        return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t
+    },
+    easeInQuint(t: number) {
+        return t * t * t * t * t
+    },
+    easeOutQuint(t: number) {
+        return 1 + --t * t * t * t * t
+    },
+    easeInOutQuint(t: number) {
+        return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t
+    }
 }
