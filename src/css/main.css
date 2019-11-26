@@ -7,8 +7,16 @@ body {
     overflow: hidden;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
+    background-image: linear-gradient(
+        176deg,
+        rgba(237, 0, 255, 0.15) 0%,
+        rgba(83, 0, 125, 0.2) 10%,
+        rgba(0, 136, 255, 0.15) 35%,
+        rgba(4, 22, 31, 0) 80%,
+        rgba(4, 22, 31, 0) 100%
+    );
 }
 .starfield-background {
     position: absolute;
