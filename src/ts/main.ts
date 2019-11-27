@@ -27,11 +27,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     })
     nightSkyContainer.appendChild(app.view)
 
-    const bg = new PIXI.Container()
-    app.stage.addChild(bg)
+    // const bg = new PIXI.Container()
+    // app.stage.addChild(bg)
 
     // screen fx
-    bg.filters = [
+    app.stage.filters = [
         new RGBSplitFilter(new PIXI.Point(-0.5, -0.5), new PIXI.Point(1, -0.5), new PIXI.Point(-1, 0.5)),
         new AdvancedBloomFilter({ threshold: 0.6, blur: 3, bloomScale: 4, brightness: 1 })
     ]
@@ -78,7 +78,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         star.alpha = 0
         star.scaleMax = random(0.3, 1)
         star.scale.set(0)
-        bg.addChild(star)
+        app.stage.addChild(star)
         stars.push(star)
         if (stars.length == PREF.STAR_COUNT) {
             clearTimeout(starBirthIntervalId)
@@ -98,6 +98,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     meteor.scale.y = PREF.METEOR_START_LENGTH_MOD
     meteor.y = -meteor.height
     meteor.visible = false
+    meteor.filters = [new AdvancedBloomFilter({ threshold: 0.2, blur: 12, bloomScale: 2, brightness: 1 })]
     meteorAnchor.addChild(meteor)
     app.stage.addChild(meteorAnchor)
     setTimeout(() => {
@@ -120,19 +121,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     cloud.width = app.renderer.width
     cloud.y -= 150
     cloud.scale.set(1.5)
-    bg.addChild(cloud)
+    app.stage.addChild(cloud)
 
     const cloud_ = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud_.width = app.renderer.width
     cloud_.y -= 50
     cloud_.tilePosition.x += 300
-    bg.addChild(cloud_)
+    app.stage.addChild(cloud_)
 
     const cloud2 = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud2.width = app.renderer.width
     cloud2.scale.set(1.5)
     cloud2.tilePosition.x += 200
-    bg.addChild(cloud2)
+    app.stage.addChild(cloud2)
 
     const cloud3 = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud3.width = app.renderer.width
@@ -140,14 +141,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     cloud3.alpha = 0.4
     cloud3.scale.set(2.5)
     cloud3.tilePosition.x += 400
-    bg.addChild(cloud3)
+    app.stage.addChild(cloud3)
 
     const cloud4 = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud4.width = app.renderer.width
     cloud4.alpha = 0.3
     cloud4.scale.set(3)
     cloud4.tilePosition.x += 500
-    bg.addChild(cloud4)
+    app.stage.addChild(cloud4)
 
     // ticker
     app.ticker.add(() => {
