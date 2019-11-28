@@ -5,9 +5,9 @@ import { AdvancedBloomFilter } from '@pixi/filter-advanced-bloom'
 
 const PREF = {
     TARGET_ELEMENT_SELECTOR: '.night-sky-container',
-    STAR_MAX_ALPHA_VELOCITY: 0.015,
-    STAR_BIRTH_INTERVAL: 50,
-    STAR_COUNT: 200,
+    STAR_MAX_ALPHA_VELOCITY: 0.013,
+    STAR_BIRTH_INTERVAL: 3,
+    STAR_COUNT: 1000,
     METEOR_VELOCITY: 35,
     METEOR_BIRTH_INTERVAL_RANGE: { MIN: 0, MAX: 5000 },
     METEOR_START_LENGTH_MOD: 10
@@ -76,10 +76,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         star.y = randomScreenY()
         star.alphaVelocity = random(-PREF.STAR_MAX_ALPHA_VELOCITY, PREF.STAR_MAX_ALPHA_VELOCITY)
         star.alpha = 0
-        star.scaleMax = random(0.3, 1)
+        star.scaleMax = EasingFunctions.easeInQuint(Math.random()).remap([0, 1], [0.2, 0.7])
         star.scale.set(0)
         app.stage.addChild(star)
         stars.push(star)
+        console.log(stars.length)
         if (stars.length == PREF.STAR_COUNT) {
             clearTimeout(starBirthIntervalId)
         }
@@ -164,7 +165,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 star.alphaVelocity = -star.alphaVelocity
             } else if (star.alpha <= 0) {
                 star.x = randomScreenX()
-                star.y = EasingFunctions.easeInQuad(Math.random()).remap([0, 1], [10, app.renderer.height - 10])
+                star.y = EasingFunctions.easeInQuad(Math.random()).remap([0, 1], [0, app.renderer.height])
                 star.alphaVelocity = -star.alphaVelocity
             }
             star.alpha += star.alphaVelocity
