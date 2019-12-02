@@ -51,11 +51,18 @@ window.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('resize', () => {
         const containerRect = nightSkyContainer.getBoundingClientRect()
         app.renderer.resize(containerRect.width, containerRect.height)
-        cloud.width = app.renderer.width
-        cloud2.width = app.renderer.width
-        cloud3.width = app.renderer.width
-        cloud4.width = app.renderer.width
-        cloud5.width = app.renderer.width
+
+        const height = app.renderer.height
+        cloud3.scale.set(height.remap([0, textureHeight], [0, 0.5]))
+        cloud4.scale.set(height.remap([0, textureHeight], [0, 0.8]))
+        cloud5.scale.set(height.remap([0, textureHeight], [0, 1]))
+
+        const width = app.renderer.width
+        cloud.width = width
+        cloud2.width = width
+        cloud3.width = width
+        cloud4.width = width
+        cloud5.width = width
     })
 
     const randomScreenX = () => Math.random().remap([0, 1], [0, app.renderer.width])
@@ -104,48 +111,40 @@ window.addEventListener('DOMContentLoaded', async () => {
         meteor.visible = true
     }, 3000)
 
-    // const logo = PIXI.Sprite.from('/textures/logo.svg')
-    // logo.anchor.set(0.5)
-    // logo.x = app.renderer.width / 2 / 2
-    // logo.y = app.renderer.height / 2 / 2
-    // logo.filters = [
-    //     new RGBSplitFilter(new PIXI.Point(-0.5, -0.5), new PIXI.Point(0.5, -0.5), new PIXI.Point(-0.5, 0.5))
-    //     // new AdvancedBloomFilter({ threshold: 0.6, blur: 0, bloomScale: 1, brightness: 0.5 })
-    // ]
-    // app.stage.addChild(logo)
+    const stageHeight = app.renderer.height
+    const textureHeight = 276
 
     // clouds
     const cloudTexture = texture('cloud.png')
-    const cloud = new PIXI.TilingSprite(cloudTexture, 600, 276)
+    const cloud = new PIXI.TilingSprite(cloudTexture, 600, textureHeight)
     cloud.width = app.renderer.width
     cloud.y -= 150
     cloud.scale.set(1.5)
     app.stage.addChild(cloud)
 
-    const cloud2 = new PIXI.TilingSprite(cloudTexture, 600, 276)
+    const cloud2 = new PIXI.TilingSprite(cloudTexture, 600, textureHeight)
     cloud2.width = app.renderer.width
     cloud2.y -= 50
     cloud2.tilePosition.x += 300
     app.stage.addChild(cloud2)
 
-    const cloud3 = new PIXI.TilingSprite(cloudTexture, 600, 276)
+    const cloud3 = new PIXI.TilingSprite(cloudTexture, 600, textureHeight)
     cloud3.width = app.renderer.width
-    cloud3.scale.set(1.5)
+    cloud3.scale.set(stageHeight.remap([0, textureHeight], [0, 0.5]))
     cloud3.tilePosition.x += 200
     app.stage.addChild(cloud3)
 
-    const cloud4 = new PIXI.TilingSprite(cloudTexture, 600, 276)
+    const cloud4 = new PIXI.TilingSprite(cloudTexture, 600, textureHeight)
     cloud4.width = app.renderer.width
-    // cloud3.y += 100
     cloud4.alpha = 0.5
-    cloud4.scale.set(2.5)
+    cloud4.scale.set(stageHeight.remap([0, textureHeight], [0, 0.8]))
     cloud4.tilePosition.x += 400
     app.stage.addChild(cloud4)
 
-    const cloud5 = new PIXI.TilingSprite(cloudTexture, 600, 276)
+    const cloud5 = new PIXI.TilingSprite(cloudTexture, 600, textureHeight)
     cloud5.width = app.renderer.width
     cloud5.alpha = 0.5
-    cloud5.scale.set(3.2)
+    cloud5.scale.set(stageHeight.remap([0, textureHeight], [0, 1]))
     cloud5.tilePosition.x += 500
     app.stage.addChild(cloud5)
 
