@@ -21,14 +21,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         width: containerRect.width,
         height: containerRect.height,
         antialias: true
-        // resolution: 2,
-        // autoDensity: true,
-        // forceFXAA: true
     })
     nightSkyContainer.appendChild(app.view)
-
-    // const bg = new PIXI.Container()
-    // app.stage.addChild(bg)
 
     // screen fx
     app.stage.filters = [
@@ -37,16 +31,16 @@ window.addEventListener('DOMContentLoaded', async () => {
     ]
 
     // fade in
-    app.stage.alpha = 0
-    const starFieldBgDiv = document.querySelector('.starfield-background') as HTMLDivElement
-    const revealStarFieldBgDiv = () => {
-        const opacity = Number(starFieldBgDiv.style.opacity)
-        starFieldBgDiv.style.opacity = `${opacity + 0.005}`
-        if (opacity < 1) {
-            requestAnimationFrame(revealStarFieldBgDiv)
-        }
-    }
-    requestAnimationFrame(revealStarFieldBgDiv)
+    // app.stage.alpha = 0
+    // const starFieldBgDiv = document.querySelector('.starfield-background') as HTMLDivElement
+    // const revealStarFieldBgDiv = () => {
+    //     const opacity = Number(starFieldBgDiv.style.opacity)
+    //     starFieldBgDiv.style.opacity = `${opacity + 0.005}`
+    //     if (opacity < 1) {
+    //         requestAnimationFrame(revealStarFieldBgDiv)
+    //     }
+    // }
+    // requestAnimationFrame(revealStarFieldBgDiv)
 
     // react to windows resize
     window.addEventListener('resize', () => {
