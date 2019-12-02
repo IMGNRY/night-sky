@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     ]
 
     // fade in
-    // app.stage.alpha = 0
+    app.stage.alpha = 0
     // const starFieldBgDiv = document.querySelector('.starfield-background') as HTMLDivElement
     // const revealStarFieldBgDiv = () => {
     //     const opacity = Number(starFieldBgDiv.style.opacity)
@@ -52,10 +52,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         const containerRect = nightSkyContainer.getBoundingClientRect()
         app.renderer.resize(containerRect.width, containerRect.height)
         cloud.width = app.renderer.width
-        cloud_.width = app.renderer.width
         cloud2.width = app.renderer.width
         cloud3.width = app.renderer.width
         cloud4.width = app.renderer.width
+        cloud5.width = app.renderer.width
     })
 
     const randomScreenX = () => Math.random().remap([0, 1], [0, app.renderer.width])
@@ -122,32 +122,32 @@ window.addEventListener('DOMContentLoaded', async () => {
     cloud.scale.set(1.5)
     app.stage.addChild(cloud)
 
-    const cloud_ = new PIXI.TilingSprite(cloudTexture, 600, 276)
-    cloud_.width = app.renderer.width
-    cloud_.y -= 50
-    cloud_.tilePosition.x += 300
-    app.stage.addChild(cloud_)
-
     const cloud2 = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud2.width = app.renderer.width
-    cloud2.scale.set(1.5)
-    cloud2.tilePosition.x += 200
+    cloud2.y -= 50
+    cloud2.tilePosition.x += 300
     app.stage.addChild(cloud2)
 
     const cloud3 = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud3.width = app.renderer.width
-    cloud3.y += 100
-    cloud3.alpha = 0.4
-    cloud3.scale.set(2.5)
-    cloud3.tilePosition.x += 400
+    cloud3.scale.set(1.5)
+    cloud3.tilePosition.x += 200
     app.stage.addChild(cloud3)
 
     const cloud4 = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud4.width = app.renderer.width
-    cloud4.alpha = 0.3
-    cloud4.scale.set(3)
-    cloud4.tilePosition.x += 500
+    // cloud3.y += 100
+    cloud4.alpha = 0.5
+    cloud4.scale.set(2.5)
+    cloud4.tilePosition.x += 400
     app.stage.addChild(cloud4)
+
+    const cloud5 = new PIXI.TilingSprite(cloudTexture, 600, 276)
+    cloud5.width = app.renderer.width
+    cloud5.alpha = 0.5
+    cloud5.scale.set(3.2)
+    cloud5.tilePosition.x += 500
+    app.stage.addChild(cloud5)
 
     // ticker
     app.ticker.add(() => {
@@ -199,10 +199,10 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // clouds
         cloud.tilePosition.x -= 0.2
-        cloud_.tilePosition.x = 0.2
-        cloud2.tilePosition.x += 0.4
-        cloud3.tilePosition.x += 0.8
-        cloud4.tilePosition.x += 1
+        cloud2.tilePosition.x = 0.2
+        cloud3.tilePosition.x += 0.4
+        cloud4.tilePosition.x += 0.6
+        cloud5.tilePosition.x += 0.8
     })
 })
 
