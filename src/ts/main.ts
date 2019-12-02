@@ -10,7 +10,12 @@ const PREF = {
     STAR_COUNT: 1000,
     METEOR_VELOCITY: 35,
     METEOR_BIRTH_INTERVAL_RANGE: { MIN: 0, MAX: 5000 },
-    METEOR_START_LENGTH_MOD: 10
+    METEOR_START_LENGTH_MOD: 10,
+    TEXTURE_ASSETS_BASE_URL: 'https://res.cloudinary.com/picular/image/upload/night-sky-textures'
+}
+
+const texture = (filename: string) => {
+    return PIXI.Texture.from(`${PREF.TEXTURE_ASSETS_BASE_URL}/${filename}`)
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -61,7 +66,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         alphaVelocity: number
         scaleMax: number
     }
-    const starTexture = PIXI.Texture.from('/textures/star.png')
+    const starTexture = texture('star.png')
     const stars: Star[] = []
     const starBirthIntervalId = setInterval(() => {
         const star = new PIXI.Sprite(starTexture) as Star
@@ -74,7 +79,6 @@ window.addEventListener('DOMContentLoaded', async () => {
         star.scale.set(0)
         app.stage.addChild(star)
         stars.push(star)
-        console.log(stars.length)
         if (stars.length == PREF.STAR_COUNT) {
             clearTimeout(starBirthIntervalId)
         }
@@ -111,7 +115,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     // app.stage.addChild(logo)
 
     // clouds
-    const cloudTexture = PIXI.Texture.from('/textures/cloud.png')
+    const cloudTexture = texture('cloud.png')
     const cloud = new PIXI.TilingSprite(cloudTexture, 600, 276)
     cloud.width = app.renderer.width
     cloud.y -= 150
