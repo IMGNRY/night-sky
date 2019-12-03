@@ -28,6 +28,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         antialias: true
     })
     nightSkyContainer.appendChild(app.view)
+    app.renderer.plugins.interaction.autoPreventDefault = false
+    app.renderer.view.style.touchAction = 'auto'
 
     // screen fx
     app.stage.filters = [
